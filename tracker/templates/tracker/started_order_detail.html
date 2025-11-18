@@ -717,6 +717,8 @@
                   'previewCustomerAddress': header.address || '-',
                   'previewInvoiceNo': header.invoice_no || '-',
                   'previewInvoiceDate': header.date || '-',
+                  'previewCodeNo': header.code_no || '-',
+                  'previewReference': header.reference || '-',
                   'previewSubtotal': (header.subtotal || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
                   'previewTax': (header.tax || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
                   'previewTotal': (header.total || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
@@ -733,7 +735,7 @@
 
               function populateManualFormWithExtracted(data) {
                 const header = data.header || {};
-                
+
                 if (manualForm) {
                   const fields = {
                     'customer_name': header.customer_name,
@@ -741,6 +743,8 @@
                     'customer_email': header.email,
                     'customer_address': header.address,
                     'invoice_number': header.invoice_no || header.code_no,
+                    'code_no': header.code_no,
+                    'reference': header.reference,
                     'subtotal': header.subtotal,
                     'tax_amount': header.tax,
                     'total_amount': header.total

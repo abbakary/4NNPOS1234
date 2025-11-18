@@ -67,7 +67,7 @@
               <strong><i class="fa fa-check-circle me-2 text-success"></i>Extracted Data Preview</strong>
               <small class="text-muted ms-2">Edit the fields below as needed</small>
             </div>
-            <div class="card-body" style="max-height: 300px; overflow-y: auto; background-color: #f8f9fa;">
+            <div class="card-body" style="max-height: 400px; overflow-y: auto; background-color: #f8f9fa;">
               <div class="row g-2">
                 <div class="col-md-6">
                   <small class="text-muted d-block">Customer Name</small>
@@ -86,12 +86,20 @@
                   <p id="previewCustomerAddress" class="mb-2">-</p>
                 </div>
                 <div class="col-md-6">
-                  <small class="text-muted d-block">Invoice Number</small>
+                  <small class="text-muted d-block">Invoice Number / PI No</small>
                   <p id="previewInvoiceNo" class="mb-2"><strong>-</strong></p>
                 </div>
                 <div class="col-md-6">
                   <small class="text-muted d-block">Invoice Date</small>
                   <p id="previewInvoiceDate" class="mb-2"><strong>-</strong></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted d-block">Code No</small>
+                  <p id="previewCodeNo" class="mb-2">-</p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted d-block">Reference</small>
+                  <p id="previewReference" class="mb-2">-</p>
                 </div>
                 <div class="col-md-4">
                   <small class="text-muted d-block">Subtotal</small>
@@ -122,16 +130,16 @@
             </div>
             <div class="card-body p-0">
               <div class="table-responsive">
-                <table class="table table-sm table-bordered mb-0">
+                <table class="table table-sm table-bordered mb-0 line-items-table">
                   <thead class="table-light">
                     <tr>
-                      <th style="width: 60px; text-align:center;">#</th>
-                      <th style="width: 120px;">Code</th>
-                      <th>Description</th>
-                      <th style="width: 90px;">Unit</th>
-                      <th style="width: 100px;">Qty</th>
-                      <th style="width: 140px;">Unit Price</th>
-                      <th style="width: 60px;">Actions</th>
+                      <th class="line-item-col-num">#</th>
+                      <th class="line-item-col-code">Code</th>
+                      <th class="line-item-col-desc">Description</th>
+                      <th class="line-item-col-unit">Unit</th>
+                      <th class="line-item-col-qty">Qty</th>
+                      <th class="line-item-col-rate">Unit Price</th>
+                      <th class="line-item-col-actions">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="lineItemRowsBody"></tbody>
@@ -222,12 +230,22 @@
             <div class="card-body">
               <div class="row mb-2">
                 <div class="col-md-6">
-                  <label class="form-label fw-bold">Invoice Number</label>
-                  <input type="text" name="invoice_number" class="form-control" placeholder="e.g., INV-001">
+                  <label class="form-label fw-bold">Invoice Number / PI No</label>
+                  <input type="text" name="invoice_number" class="form-control" id="invoiceNumberField" placeholder="e.g., INV-001 or PI-1765632">
                 </div>
                 <div class="col-md-6">
                   <label class="form-label fw-bold">Invoice Date</label>
                   <input type="date" name="invoice_date" class="form-control" value="{% now 'Y-m-d' %}" required>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-6">
+                  <label class="form-label">Code No. <small class="text-muted">(optional)</small></label>
+                  <input type="text" name="code_no" class="form-control" id="codeNoField" placeholder="e.g., A01696">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Reference <small class="text-muted">(optional)</small></label>
+                  <input type="text" name="reference" class="form-control" id="referenceField" placeholder="e.g., T 211 EDF">
                 </div>
               </div>
             </div>
@@ -289,3 +307,120 @@
     </div>
   </div>
 </div>
+
+<style>
+/* Line items table responsive styling */
+.line-items-table {
+  font-size: 0.85rem;
+}
+
+.line-items-table th,
+.line-items-table td {
+  padding: 0.5rem 0.4rem;
+  overflow: hidden;
+}
+
+.line-item-col-num {
+  width: 50px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.line-item-col-code {
+  width: 100px;
+  min-width: 100px;
+}
+
+.line-item-col-desc {
+  min-width: 180px;
+  flex-grow: 1;
+}
+
+.line-item-col-unit {
+  width: 70px;
+}
+
+.line-item-col-qty {
+  width: 80px;
+}
+
+.line-item-col-rate {
+  width: 110px;
+}
+
+.line-item-col-actions {
+  width: 60px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.line-items-table input[type="text"],
+.line-items-table input[type="number"] {
+  width: 100%;
+  padding: 0.3rem;
+  font-size: 0.85rem;
+}
+
+.line-items-table input[type="text"]::placeholder,
+.line-items-table input[type="number"]::placeholder {
+  font-size: 0.8rem;
+}
+
+/* Remove input borders for cleaner look */
+.line-items-table input[type="text"],
+.line-items-table input[type="number"] {
+  border: 1px solid #dee2e6;
+}
+
+.line-items-table input[type="text"]:focus,
+.line-items-table input[type="number"]:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Make description column wrap if needed */
+.line-items-table .line-item-col-desc {
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* Remove button styling for better consistency */
+.line-items-table .remove-line-item {
+  padding: 0.3rem 0.5rem;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@media (max-width: 1200px) {
+  .line-item-col-desc {
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .line-items-table th,
+  .line-items-table td {
+    padding: 0.3rem 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .line-items-table input[type="text"],
+  .line-items-table input[type="number"] {
+    padding: 0.2rem;
+    font-size: 0.75rem;
+  }
+
+  .line-item-col-code {
+    width: 80px;
+    min-width: 80px;
+  }
+
+  .line-item-col-desc {
+    min-width: 120px;
+  }
+
+  .line-item-col-rate {
+    width: 90px;
+  }
+}
+</style>
