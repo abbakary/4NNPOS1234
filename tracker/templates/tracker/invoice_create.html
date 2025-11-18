@@ -967,6 +967,26 @@
                       populateLineItems(items);
                     }
 
+                    // Show extracted totals in the preview box
+                    const subtotalEl = document.getElementById('previewNet');
+                    const taxEl = document.getElementById('previewVAT');
+                    const grossEl = document.getElementById('previewGross');
+                    const taxRateEl = document.getElementById('previewTaxRate');
+
+                    if (subtotalEl && hdr.subtotal) {
+                      subtotalEl.textContent = parseFloat(hdr.subtotal).toLocaleString('en-US', {minimumFractionDigits: 2}) + ' TSH';
+                    }
+                    if (taxEl && hdr.tax) {
+                      taxEl.textContent = parseFloat(hdr.tax).toLocaleString('en-US', {minimumFractionDigits: 2}) + ' TSH';
+                    }
+                    if (grossEl && hdr.total) {
+                      grossEl.textContent = parseFloat(hdr.total).toLocaleString('en-US', {minimumFractionDigits: 2}) + ' TSH';
+                    }
+                    if (taxRateEl && hdr.tax && hdr.subtotal && hdr.subtotal > 0) {
+                      const rate = ((parseFloat(hdr.tax) / parseFloat(hdr.subtotal)) * 100).toFixed(2);
+                      taxRateEl.textContent = rate;
+                    }
+
                     if (reviewModal) reviewModal.hide();
                     successMsg.style.display='block';
                     errorBox.style.display='none';
