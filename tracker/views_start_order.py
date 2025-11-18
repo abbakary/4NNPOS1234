@@ -975,14 +975,12 @@ def api_create_order_from_modal(request):
             except (ValueError, TypeError):
                 est_duration = None
 
-            # Create order
-            order = Order.objects.create(
+            # Create order using OrderService to ensure proper visit tracking
+            order = OrderService.create_order(
                 customer=customer,
-                vehicle=vehicle,
+                order_type=order_type,
                 branch=user_branch,
-                type=order_type,
-                status='created',
-                started_at=None,  # Will be set to created_at when auto-progressed after 10 minutes
+                vehicle=vehicle,
                 description=description or f"Order for {customer.full_name}",
                 priority=priority if priority in ['low', 'medium', 'high', 'urgent'] else 'medium',
                 estimated_duration=est_duration,
