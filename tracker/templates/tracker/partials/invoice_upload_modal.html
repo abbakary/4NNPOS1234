@@ -477,6 +477,11 @@
 
       createInvoiceBtn.disabled = false;
 
+      // Show toggle button to add order types
+      if (toggleAddOrderTypeBtn) {
+        toggleAddOrderTypeBtn.style.display = 'block';
+      }
+
       errorBox.style.display = 'none';
 
     } catch (err) {
