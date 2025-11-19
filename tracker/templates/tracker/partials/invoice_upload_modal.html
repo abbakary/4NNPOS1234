@@ -207,6 +207,45 @@
   </div>
 </div>
 
+<!-- Add Order Type Modal -->
+<div class="modal fade" id="addOrderTypeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="fa fa-plus-circle me-2"></i>Add Order Type
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label fw-medium">Order Type *</label>
+          <select id="additionalOrderTypeSelect" class="form-select" required>
+            <option value="">-- Select Order Type --</option>
+            <option value="service">Service Order</option>
+            <option value="sales">Sales Order</option>
+            <option value="inquiry">Inquiry</option>
+          </select>
+          <small class="text-muted">Select the type of order this invoice covers</small>
+        </div>
+        <div class="mb-0">
+          <label class="form-label fw-medium">Reason *</label>
+          <textarea id="additionalOrderTypeReason" class="form-control" rows="3" placeholder="Explain why this invoice includes multiple order types..." required></textarea>
+          <small class="text-muted">Provide a reason for the additional order type</small>
+        </div>
+      </div>
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <i class="fa fa-times me-1"></i>Cancel
+        </button>
+        <button type="button" class="btn btn-primary" id="confirmAddOrderTypeBtn">
+          <i class="fa fa-check me-1"></i>Add Order Type
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
 .extracted-line-items-table {
   font-size: 0.85rem;
