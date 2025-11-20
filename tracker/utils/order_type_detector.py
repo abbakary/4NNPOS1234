@@ -129,21 +129,33 @@ def _normalize_category_to_order_type(category: str) -> str:
         return 'labour'
 
 
-def get_mixed_order_status_display(order_type: str, categories: List[str]) -> str:
+def get_mixed_order_status_display(order_type: str, order_types_found: List[str] = None, categories: List[str] = None) -> str:
     """
-    Generate a display string for order status showing mixed types.
-    
+    Generate a display string for order status showing types and categories.
+
+    Args:
+        order_type: The determined order type ('sales', 'service', 'labour', 'mixed')
+        order_types_found: List of actual order types found (e.g., ['sales', 'labour'])
+        categories: List of labour code categories found
+
     Examples:
-    - 'service', ['tyre service'] -> 'Service'
-    - 'labour', ['labour'] -> 'Labour'
-    - 'mixed', ['labour', 'tyre service'] -> 'Mixed (Labour, Tyre Service)'
+    - 'service', ['service'], ['tyre service'] -> 'Service'
+    - 'labour', ['labour'], ['labour'] -> 'Labour'
+    - 'mixed', ['sales', 'labour'], ['labour'] -> 'Sales and Labour'
+    - 'mixed', ['labour', 'service'], ['labour', 'tyre service'] -> 'Labour and Service'
+    - 'sales', ['sales'], [] -> 'Sales'
     """
-    if order_type == 'mixed' and categories:
-        formatted_categories = ', '.join(
-            cat.title() for cat in categories
-        )
-        return f"Mixed ({formatted_categories})"
-    elif order_type == 'labour':
+    if order_type == 'mixed' and order_types_found:
+        # Format as "Type1 and Type2 and Type3"
+        type_names = [_format_type_name(t) for t in sorted(order_types_found)]
+        return ' and '.join(type_names)
+    else:
+        return _format_type_name(order_type)
+
+
+def _format_type_name(order_type: str) -> str:
+    """Format order type name for display."""
+    if order_type == 'labour':
         return 'Labour'
     elif order_type == 'service':
         return 'Service'
