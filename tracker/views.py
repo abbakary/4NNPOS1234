@@ -1902,14 +1902,16 @@ def create_order_for_customer(request: HttpRequest, pk: int):
                     return render(request, "tracker/order_create.html", {"customer": c, "form": form})
             o.save()
 
-            # Update customer visit/arrival status for returning tracking
+            # Update customer visit/arrival status using centralized service
             try:
+                from .services import CustomerService
                 now_ts = timezone.now()
                 c.arrival_time = now_ts
                 c.current_status = 'arrived'
                 c.last_visit = now_ts
-                c.total_visits = (c.total_visits or 0) + 1
-                c.save(update_fields=['arrival_time','current_status','last_visit','total_visits'])
+                c.save(update_fields=['arrival_time','current_status','last_visit'])
+                # Use centralized service to increment visit count (avoids duplicates)
+                CustomerService.update_customer_visit(c)
             except Exception:
                 pass
 
