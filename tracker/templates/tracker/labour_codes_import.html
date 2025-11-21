@@ -226,9 +226,44 @@ function downloadSampleCSV() {
         '22007,OIL SERVICE (FILTER) FOR 4X4,labour\n' +
         '21044,WHEEL BALANCE ALLOY RIMS,tyre service\n' +
         '21031,REPAIR & A/C PASSENGER,labour\n' +
-        '32004,WHEEL BALANCE TRUCK,tyre service\n' +
+        '21019,WHEEL ALIGNMENT SMALL,tyre service\n' +
         '21003,WHEEL BALANCE TRUCK,tyre service\n' +
-        '21037,TYRE FITTING-TRUCK,tyre service';
+        '41005,TRAILER ALIGNMENT MECHANICAL SUSPENSION PER AXLE,tyre service / makill\n' +
+        '41003,STEERING AXLE ALIGNMENT NON-MICHELIN TYPE,tyre service / makill\n' +
+        '21037,TYRE FITTING-TRUCK,tyre service\n' +
+        '21035,WHEEL BALANCE 15-16 INCH,tyre service\n' +
+        '21002,WHEEL BALANCE 15-16 INCH,tyre service\n' +
+        '21012,TYRE FITTING SMALL,tyre service\n' +
+        '21013,TYRE ROTATION SERVICE 4X4,tyre service\n' +
+        '21020,WHEEL ALIGNMENT BIG,tyre service\n' +
+        '21017,TYRE ROTATION TRUCK,tyre service\n' +
+        '21027,TYRE ROTATION SERVICE TRUCK,tyre service\n' +
+        '22014,VEHICLE DIAGNOSIS FOR PASSENGER CAR,labour\n' +
+        '22015,VEHICLE DIAGNOSIS FOR 4X4,labour\n' +
+        '22016,VEHICLE DIAGNOSIS FOR TRUCK,labour\n' +
+        '11012,SERVICE CONTRACTS,labour\n' +
+        '11013,TYRE SERVICE CONTRACTS,tyre service\n' +
+        '21036,GREASE SERVICE 4X4,labour\n' +
+        '22005,OIL SERVICE OIL FILTER AIR FILTER ADDITIONAL DIFF OIL FUEL FILTER HYDRAULIC ENGINE COOLANT BRAKE FLUID FOR PASSENGER,labour\n' +
+        '22006,OIL SERVICE OIL FILTER AIR FILTER ADDITIONAL DIFF OIL FUEL FILTER HYDRAULIC ENGINE COOLANT BRAKE FLUID FOR PASSENGER,labour\n' +
+        '22008,SHOCK ABSORBERS SERVICE FOR 4X4,labour\n' +
+        '22009,SHOCK ABSORBERS SERVICE FOR TRUCK,labour\n' +
+        '22011,AC SERVICE FOR PASSENGER CAR,labour\n' +
+        '22012,AC SERVICE FOR 4X4,labour\n' +
+        '22013,AC SERVICE FOR TRUCK,labour\n' +
+        '31004,TYRE MAINTENANCE SERVICE,tyre service\n' +
+        '31005,SPARE SERVICE,labour\n' +
+        '33001,INSPECTION,labour\n' +
+        '32007,SERVICE FOR STAFF CARS,labour\n' +
+        '38001,TBL SERVICE CONTRACT KWANZA,labour\n' +
+        '38002,TYRE MANAGEMENT SERVICE CHARGE BUDIN,labour\n' +
+        '12005,DELIVERY CHARGES,labour\n' +
+        '22001,BRAKE PAD FITMENT PER AXLE FOR PASSENGER CAR,labour\n' +
+        '22004,BRAKE PAD FITMENT PER AXLE FOR TRUCK,labour\n' +
+        '11013,TYRE SERVICE CONTRACTS,tyre service\n' +
+        '21096,GREASE SERVICE 4X4,labour\n' +
+        '22202,SHOCK ABSORBERS SERVICE FOR TRUCK,labour\n' +
+        '33002,INTEGRATED SERVICE,labour';
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
@@ -248,9 +283,43 @@ function downloadSampleExcel() {
             ['22007', 'OIL SERVICE (FILTER) FOR 4X4', 'labour'],
             ['21044', 'WHEEL BALANCE ALLOY RIMS', 'tyre service'],
             ['21031', 'REPAIR & A/C PASSENGER', 'labour'],
-            ['32004', 'WHEEL BALANCE TRUCK', 'tyre service'],
+            ['21019', 'WHEEL ALIGNMENT SMALL', 'tyre service'],
             ['21003', 'WHEEL BALANCE TRUCK', 'tyre service'],
-            ['21037', 'TYRE FITTING-TRUCK', 'tyre service']
+            ['41005', 'TRAILER ALIGNMENT MECHANICAL SUSPENSION PER AXLE', 'tyre service / makill'],
+            ['41003', 'STEERING AXLE ALIGNMENT NON-MICHELIN TYPE', 'tyre service / makill'],
+            ['21037', 'TYRE FITTING-TRUCK', 'tyre service'],
+            ['21035', 'WHEEL BALANCE 15-16 INCH', 'tyre service'],
+            ['21002', 'WHEEL BALANCE 15-16 INCH', 'tyre service'],
+            ['21012', 'TYRE FITTING SMALL', 'tyre service'],
+            ['21013', 'TYRE ROTATION SERVICE 4X4', 'tyre service'],
+            ['21020', 'WHEEL ALIGNMENT BIG', 'tyre service'],
+            ['21017', 'TYRE ROTATION TRUCK', 'tyre service'],
+            ['21027', 'TYRE ROTATION SERVICE TRUCK', 'tyre service'],
+            ['22014', 'VEHICLE DIAGNOSIS FOR PASSENGER CAR', 'labour'],
+            ['22015', 'VEHICLE DIAGNOSIS FOR 4X4', 'labour'],
+            ['22016', 'VEHICLE DIAGNOSIS FOR TRUCK', 'labour'],
+            ['11012', 'SERVICE CONTRACTS', 'labour'],
+            ['11013', 'TYRE SERVICE CONTRACTS', 'tyre service'],
+            ['21036', 'GREASE SERVICE 4X4', 'labour'],
+            ['22005', 'OIL SERVICE OIL FILTER AIR FILTER ADDITIONAL DIFF OIL FUEL FILTER HYDRAULIC ENGINE COOLANT BRAKE FLUID FOR PASSENGER', 'labour'],
+            ['22006', 'OIL SERVICE OIL FILTER AIR FILTER ADDITIONAL DIFF OIL FUEL FILTER HYDRAULIC ENGINE COOLANT BRAKE FLUID FOR PASSENGER', 'labour'],
+            ['22008', 'SHOCK ABSORBERS SERVICE FOR 4X4', 'labour'],
+            ['22009', 'SHOCK ABSORBERS SERVICE FOR TRUCK', 'labour'],
+            ['22011', 'AC SERVICE FOR PASSENGER CAR', 'labour'],
+            ['22012', 'AC SERVICE FOR 4X4', 'labour'],
+            ['22013', 'AC SERVICE FOR TRUCK', 'labour'],
+            ['31004', 'TYRE MAINTENANCE SERVICE', 'tyre service'],
+            ['31005', 'SPARE SERVICE', 'labour'],
+            ['33001', 'INSPECTION', 'labour'],
+            ['32007', 'SERVICE FOR STAFF CARS', 'labour'],
+            ['38001', 'TBL SERVICE CONTRACT KWANZA', 'labour'],
+            ['38002', 'TYRE MANAGEMENT SERVICE CHARGE BUDIN', 'labour'],
+            ['12005', 'DELIVERY CHARGES', 'labour'],
+            ['22001', 'BRAKE PAD FITMENT PER AXLE FOR PASSENGER CAR', 'labour'],
+            ['22004', 'BRAKE PAD FITMENT PER AXLE FOR TRUCK', 'labour'],
+            ['21096', 'GREASE SERVICE 4X4', 'labour'],
+            ['22202', 'SHOCK ABSORBERS SERVICE FOR TRUCK', 'labour'],
+            ['33002', 'INTEGRATED SERVICE', 'labour']
         ];
 
         let csv = data.map(row => row.map(cell => {
