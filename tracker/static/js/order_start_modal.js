@@ -161,25 +161,12 @@ class OrderStartModal {
         // Step 0 (quick lookup) is optional - always return true
         return true;
       case 1:
-        return this.validateOrderType();
-      case 2:
         return this.validateCustomerType();
-      case 3:
+      case 2:
         return this.validateExtractedData();
       default:
         return true;
     }
-  }
-
-  validateOrderType() {
-    const selected = document.querySelector('input[name="order_type"]:checked');
-    
-    if (!selected) {
-      this.showError('orderTypeError', 'Please select an order type');
-      return false;
-    }
-
-    return true;
   }
 
   validateCustomerType() {
