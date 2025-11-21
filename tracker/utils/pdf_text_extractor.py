@@ -150,10 +150,52 @@ def extract_customer_information(lines):
 def extract_customer_address(lines):
     """Extract only customer address, excluding seller address."""
     address_lines = []
-    
+
+    # FIRST PASS: Look for "Address :" label (primary method)
+    for i, line in enumerate(lines):
+        # Look for "Address :" label in the line
+        address_match = re.search(r'Address\s*[\t:]?\s*(.+?)(?:\s+(?:Cust\s+Ref|Tel|Fax|Email|$))', line, re.I)
+        if address_match:
+            address_part = address_match.group(1).strip()
+
+            # Exclude lines that clearly belong to seller info
+            if not re.search(r'16541|Superdoll|Tax\s+ID|VAT\s+Reg', line, re.I):
+                address_lines.append(address_part)
+
+                # Look for continuation lines (next lines without a label)
+                j = i + 1
+                while j < len(lines) and j < i + 4:
+                    next_line = lines[j].strip()
+
+                    # Stop if we hit a label line (contains a field name with colon)
+                    if re.search(r'^[A-Z][A-Za-z\s]*[\t:]', next_line):
+                        break
+
+                    # Include lines that look like address continuations
+                    if next_line and not re.search(r'16541|Superdoll|Tax\s+ID|VAT\s+Reg', next_line, re.I):
+                        # Check if it looks like an address line
+                        if (re.search(r'DAR\s*ES\s*SALAAM|TANZANIA|[A-Z]+\s+ROAD|PLOT\s+\d+|P\.?O\.?\s*BOX|^\d+\s|^[A-Z]{2,}', next_line, re.I)):
+                            address_lines.append(next_line)
+                            j += 1
+                        else:
+                            break
+                    else:
+                        break
+
+                if address_lines:
+                    # Join all address lines and clean up
+                    clean_address = ' '.join(address_lines)
+                    clean_address = re.sub(r'\s+', ' ', clean_address).strip()
+                    # Remove any trailing "Cust Ref" or similar that might have been partially captured
+                    clean_address = re.sub(r'\s+(?:Cust\s+Ref|Ref\s+Date|Del\.\s+Date|$).*$', '', clean_address, flags=re.I)
+                    clean_address = re.sub(r'\s+', ' ', clean_address).strip()
+                    logger.info(f"Found customer address from 'Address :' label: {clean_address}")
+                    return clean_address
+
+    # SECOND PASS: Fallback to P.O. Box search if "Address :" label not found
     for i, line in enumerate(lines):
         # Look for address indicators in customer context
-        if (re.search(r'P\.?O\.?\s*Box\s*\d+', line, re.I) and 
+        if (re.search(r'P\.?O\.?\s*Box\s*\d+', line, re.I) and
             not re.search(r'16541|Superdoll', line, re.I)):  # Exclude seller PO Box
             address_lines.append(line.strip())
             # Look for continuation lines
@@ -169,14 +211,14 @@ def extract_customer_address(lines):
                 else:
                     break
             break
-    
+
     if address_lines:
         # Clean up the address - remove any seller information
         clean_address = ' '.join(address_lines)
         clean_address = re.sub(r'\s+', ' ', clean_address).strip()
-        logger.info(f"Found customer address: {clean_address}")
+        logger.info(f"Found customer address from fallback P.O. Box search: {clean_address}")
         return clean_address
-    
+
     return None
 
 def extract_customer_phone(lines):
