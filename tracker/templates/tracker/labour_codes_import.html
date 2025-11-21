@@ -40,23 +40,23 @@
                     <span class="d-block mt-2 text-muted">Upload a CSV file with labour codes or add them manually below.</span>
                 </div>
                 <div class="card-body">
-                    <!-- CSV Import Form -->
+                    <!-- File Import Form -->
                     <div class="mb-4">
-                        <h6 class="mb-3 fw-bold">CSV Import</h6>
-                        <form method="post" enctype="multipart/form-data" class="csv-import-form">
+                        <h6 class="mb-3 fw-bold">Import Labour Codes from CSV or Excel</h6>
+                        <form method="post" enctype="multipart/form-data" class="file-import-form">
                             {% csrf_token %}
-                            
-                            <!-- CSV File Upload -->
+
+                            <!-- File Upload -->
                             <div class="mb-3">
-                                <label class="form-label">CSV File <span class="text-danger">*</span></label>
+                                <label class="form-label">CSV or Excel File <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <input type="file" class="form-control" name="csv_file" accept=".csv" required>
+                                    <input type="file" class="form-control" name="import_file" accept=".csv,.xlsx,.xls" required>
                                     <button class="btn btn-primary" type="submit" name="action" value="import">
                                         <i class="fa fa-upload"></i> Import
                                     </button>
                                 </div>
                                 <small class="d-block mt-2 text-muted">
-                                    CSV must contain columns: <code>code</code>, <code>description</code>, <code>category</code>
+                                    Supports CSV and Excel files (.csv, .xlsx, .xls). Must contain columns: <code>code</code>, <code>description</code>, <code>category</code>
                                 </small>
                             </div>
 
@@ -67,24 +67,51 @@
                                     Clear all existing codes before importing
                                 </label>
                                 <small class="d-block mt-1 text-muted">
-                                    Warning: This will delete all existing labour codes
+                                    ⚠️ Warning: This will delete all existing labour codes
                                 </small>
                             </div>
                         </form>
 
-                        <!-- Sample CSV Template -->
+                        <!-- Sample Template -->
                         <div class="mt-4 p-3 bg-light rounded">
-                            <h6 class="mb-3">Sample CSV Format:</h6>
-                            <code class="d-block text-dark" style="font-size: 12px; line-height: 1.6;">
+                            <h6 class="mb-3">Required Columns & Format:</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-muted mb-2">Column Names (Required):</h6>
+                                    <ul class="small list-unstyled">
+                                        <li><code>code</code> - Unique labour code identifier</li>
+                                        <li><code>description</code> - Item description</li>
+                                        <li><code>category</code> - Category (labour, tyre service, etc)</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-muted mb-2">Optional Column:</h6>
+                                    <ul class="small list-unstyled">
+                                        <li><code>is_active</code> - true/false (default: true)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <hr class="my-3">
+
+                            <h6 class="mb-2">Sample Data:</h6>
+                            <code class="d-block text-dark" style="font-size: 11px; line-height: 1.6; overflow-x: auto;">
 code,description,category<br>
 22007,OIL SERVICE (FILTER) FOR 4X4,labour<br>
 21044,WHEEL BALANCE ALLOY RIMS,tyre service<br>
 21031,REPAIR & A/C PASSENGER,labour<br>
-32004,WHEEL BALANCE TRUCK,tyre service
+32004,WHEEL BALANCE TRUCK,tyre service<br>
+21037,TYRE FITTING-TRUCK,tyre service
                             </code>
-                            <button class="btn btn-sm btn-outline-primary mt-3" type="button" onclick="downloadSampleCSV()">
-                                <i class="fa fa-download"></i> Download Sample CSV
-                            </button>
+
+                            <div class="mt-3">
+                                <button class="btn btn-sm btn-outline-primary" type="button" onclick="downloadSampleCSV()">
+                                    <i class="fa fa-download"></i> Download Sample CSV
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="downloadSampleExcel()">
+                                    <i class="fa fa-download"></i> Download Sample Excel
+                                </button>
+                            </div>
                         </div>
                     </div>
 
