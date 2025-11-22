@@ -529,16 +529,42 @@ document.addEventListener('DOMContentLoaded', function() {
         filters.end_date = document.getElementById('endDate').value;
         filters.status = document.getElementById('statusFilter').value;
         filters.order_type = document.getElementById('orderTypeFilter').value;
-        filters.search = document.getElementById('searchInput').value;
+        filters.search = document.getElementById('searchInput').value || '';
     }
-    
+
+    function buildApiUrl(endpoint, params) {
+        const url = new URL(endpoint, window.location.origin);
+        Object.keys(params).forEach(key => {
+            const value = params[key];
+            if (value !== undefined && value !== null && value !== '') {
+                url.searchParams.append(key, value);
+            }
+        });
+        return url.toString();
+    }
+
     function loadDashboardData() {
         updateFilters();
         showLoadingSpinner(true);
-        
+
+        const trackingParams = {
+            period: filters.period,
+            start_date: filters.start_date,
+            end_date: filters.end_date,
+            status: filters.status,
+            order_type: filters.order_type,
+            search: filters.search
+        };
+
+        const analyticsParams = {
+            period: filters.period,
+            start_date: filters.start_date,
+            end_date: filters.end_date
+        };
+
         Promise.all([
-            fetch(`/tracker/api/vehicles/tracking/data/?period=${filters.period}&start_date=${filters.start_date}&end_date=${filters.end_date}&status=${filters.status}&order_type=${filters.order_type}&search=${filters.search}`).then(r => r.json()),
-            fetch(`/tracker/api/vehicles/analytics/?period=${filters.period}&start_date=${filters.start_date}&end_date=${filters.end_date}`).then(r => r.json())
+            fetch(buildApiUrl('/tracker/api/vehicles/tracking/data/', trackingParams)).then(r => r.json()),
+            fetch(buildApiUrl('/tracker/api/vehicles/analytics/', analyticsParams)).then(r => r.json())
         ]).then(([trackingData, analyticsData]) => {
             if (trackingData.success) {
                 renderMetrics(trackingData.summary);
