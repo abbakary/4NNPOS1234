@@ -372,20 +372,25 @@ def api_vehicle_analytics(request):
 
         logger.info(f"Analytics - Invoices in range {start_date} to {end_date}: {invoices_qs.count()}")
 
-        # Get invoices with dates (use TruncDate which SQLite supports)
-        invoices_with_dates = invoices_qs.annotate(
-            period_date=TruncDate('invoice_date')
-        ).values(
-            'period_date',
+        # Fetch all invoices without database-level date truncation (SQLite compatibility)
+        invoices_with_dates = invoices_qs.values(
+            'invoice_date',
             'total_amount',
             'vehicle'
-        ).order_by('period_date')
+        ).order_by('invoice_date')
 
-        # Group data by period in Python (SQLite workaround)
+        # Group data by period in Python
         trends_dict = defaultdict(lambda: {'total_amount': Decimal('0'), 'invoice_count': 0, 'vehicles': set()})
 
         for invoice in invoices_with_dates:
-            invoice_date = invoice['period_date']
+            # Get the date portion from invoice_date (handle datetime if needed)
+            invoice_date_value = invoice['invoice_date']
+            if hasattr(invoice_date_value, 'date'):
+                # It's a datetime, convert to date
+                invoice_date = invoice_date_value.date()
+            else:
+                # It's already a date
+                invoice_date = invoice_date_value
 
             # Determine grouping key based on period
             if period == 'daily':
@@ -397,7 +402,7 @@ def api_vehicle_analytics(request):
                 # Group by first day of month
                 period_key = invoice_date.replace(day=1)
 
-            trends_dict[period_key]['total_amount'] += invoice['total_amount'] or 0
+            trends_dict[period_key]['total_amount'] += invoice['total_amount'] or Decimal('0')
             trends_dict[period_key]['invoice_count'] += 1
             if invoice['vehicle']:
                 trends_dict[period_key]['vehicles'].add(invoice['vehicle'])
