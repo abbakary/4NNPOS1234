@@ -371,30 +371,46 @@ def api_vehicle_analytics(request):
 
         logger.info(f"Analytics - Invoices in range {start_date} to {end_date}: {invoices_qs.count()}")
 
-        # Aggregate by time period
-        if period == 'daily':
-            trunc_field = TruncDate('invoice_date')
-        elif period == 'weekly':
-            trunc_field = TruncWeek('invoice_date')
-        else:
-            trunc_field = TruncMonth('invoice_date')
-        
-        trends = invoices_qs.annotate(
-            period_date=trunc_field
-        ).values('period_date').annotate(
-            total_amount=Sum('total_amount'),
-            invoice_count=Count('id'),
-            vehicle_count=Count('vehicle', distinct=True)
+        # Get invoices with dates (use TruncDate which SQLite supports)
+        invoices_with_dates = invoices_qs.annotate(
+            period_date=TruncDate('invoice_date')
+        ).values(
+            'period_date',
+            'total_amount',
+            'vehicle'
         ).order_by('period_date')
-        
+
+        # Group data by period in Python (SQLite workaround)
+        from collections import defaultdict
+        trends_dict = defaultdict(lambda: {'total_amount': 0, 'invoice_count': 0, 'vehicles': set()})
+
+        for invoice in invoices_with_dates:
+            invoice_date = invoice['period_date']
+
+            # Determine grouping key based on period
+            if period == 'daily':
+                period_key = invoice_date
+            elif period == 'weekly':
+                # Group by week (Monday of that week)
+                period_key = invoice_date - timedelta(days=invoice_date.weekday())
+            else:  # monthly
+                # Group by first day of month
+                period_key = invoice_date.replace(day=1)
+
+            trends_dict[period_key]['total_amount'] += invoice['total_amount'] or 0
+            trends_dict[period_key]['invoice_count'] += 1
+            if invoice['vehicle']:
+                trends_dict[period_key]['vehicles'].add(invoice['vehicle'])
+
+        # Convert to list and sort by date
         trends_data = [
             {
-                'date': t['period_date'].isoformat() if t['period_date'] else '',
-                'total_amount': float(t['total_amount'] or 0),
-                'invoice_count': t['invoice_count'],
-                'vehicle_count': t['vehicle_count'],
+                'date': date.isoformat() if date else '',
+                'total_amount': float(data['total_amount']),
+                'invoice_count': data['invoice_count'],
+                'vehicle_count': len(data['vehicles']),
             }
-            for t in trends
+            for date, data in sorted(trends_dict.items())
         ]
         
         # Spending by order type
