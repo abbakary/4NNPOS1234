@@ -545,24 +545,7 @@
                         </td>
                         <td class="col-line-item-type" style="text-align: center;">
                           {% if item.code %}
-                            <script>
-                            (function() {
-                              const code = '{{ item.code }}';
-                              const td = document.currentScript.parentElement;
-                              fetch('{% url "tracker:api_get_item_code_type" %}?code=' + encodeURIComponent(code))
-                                .then(r => r.json())
-                                .then(data => {
-                                  if (data.order_type) {
-                                    const types = { 'labour': { text: 'Labour', badge: 'bg-info', icon: 'fa-tools' }, 'service': { text: 'Service', badge: 'bg-primary', icon: 'fa-wrench' }, 'sales': { text: 'Sales', badge: 'bg-success', icon: 'fa-shopping-cart' } };
-                                    const type = types[data.order_type] || types['sales'];
-                                    td.innerHTML = `<span class="badge ${type.badge} rounded-pill"><i class="fa ${type.icon} me-1"></i>${type.text}</span>`;
-                                  } else {
-                                    td.innerHTML = '<small class="text-muted">-</small>';
-                                  }
-                                }).catch(() => td.innerHTML = '<small class="text-muted">-</small>');
-                            })();
-                            </script>
-                            <small class="text-muted">Loading...</small>
+                            <small class="text-muted">{% if item.item_type == 'service' %}<span class="badge bg-primary"><i class="fa fa-wrench me-1"></i>Service</span>{% elif item.item_type == 'product' %}<span class="badge bg-success"><i class="fa fa-shopping-cart me-1"></i>Product</span>{% else %}<span class="badge bg-secondary">-</span>{% endif %}</small>
                           {% else %}
                             <small class="text-muted">-</small>
                           {% endif %}
